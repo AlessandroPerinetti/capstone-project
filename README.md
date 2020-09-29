@@ -4,7 +4,10 @@
 
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://github.com/udacity/CarND-Capstone).
 
-The project is completed as an **Individual Submission**.
+For this project, I have written ROS nodes to implement core functionality of the autonomous vehicle system, including traffic light detection, control, and waypoint following.
+Finally, the code needs to be tested in a simulator.
+
+The project is submitted as an **Individual Submission**.
 
 Please use **one** of the two installation options, either native **or** docker installation.
 
@@ -45,7 +48,7 @@ To set up port forwarding, please refer to the [instructions from term 2](https:
 
 1. Clone the project repository
 ```bash
-git clone https://github.com/udacity/CarND-Capstone.git
+git clone https://github.com/AlessandroPerinetti/capstone-project.git
 ```
 
 2. Install python dependencies
@@ -99,33 +102,37 @@ The number of waypoints and the publishing rate are choosen in order to obtain g
 
 The drive-by-wire (dbw) node (in particular the packages ``dbw_node.py``, ``twist_controller.py``, along with a pid and lowpass filter) is responsible for the throttle, brake, and steering control. 
 
-The dbw_node subscribes to the ``/current_velocity`` topic along with the ``/twist_cmd topic`` to receive target linear and angular velocities. Additionally, this node will subscribe to ``/vehicle/dbw_enabled``, which indicates if the car is under dbw or driver control. This node will publish throttle, brake, and steering commands to the ``/vehicle/throttle_cmd``, ``/vehicle/brake_cmd``, and ``/vehicle/steering_cmd`` topics.
+The dbw_node subscribes to the ``/current_velocity`` topic and the ``/twist_cmd`` topic to receive target linear and angular velocities. Additionally, this node will subscribe to ``/vehicle/dbw_enabled``, which indicates if the car is under dbw or driver control. This node will publish throttle, brake, and steering commands to the ``/vehicle/throttle_cmd``, ``/vehicle/brake_cmd``, and ``/vehicle/steering_cmd`` topics.
 
 The throttle value is managed by a PI controller tuned such that the car is able to reach the target velocity.
+
 On the other hand, the steering angle is obtained from the package ``yaw__controller.py`` and is defined in a way that the car follows the waypoints.
 
 ### Traffic Light Detection
 
-This package contains the traffic light detection node: ``tl_detector.py``. This node takes in data from the ``/image_color``, ``/current_pose``, and ``/base_waypoints`` topics and publishes the locations to stop for red traffic lights to the ``/traffic_waypoint`` topic.
+This package contains the traffic light detection node ``tl_detector.py``. This node takes in data from the ``/image_color``, ``/current_pose``, and ``/base_waypoints`` topics and publishes the locations to stop for red traffic lights to the ``/traffic_waypoint`` topic.
 
 The ``/current_pose`` topic provides the vehicle's current position, and ``/base_waypoints`` provides a complete list of waypoints the car will be following.
 
-This node is responsible for detecting upcoming traffic lights and classify their states (red, yellow, green).
+This node is responsible for detecting upcoming traffic lights and classify their states (red, yellow, green or unknown).
 
-I used the pre-trained [SSD](https://github.com/tensorflow/models/tree/master/research/object_detection) (Single Shot MultiBox Detector) model to detect and classify the traffic lights in the images provided by the camera. 
+I used the pre-trained [SSD](https://github.com/tensorflow/models/tree/master/research/object_detection) model to detect and classify the traffic lights in the images provided by the camera. 
 
 The model was adapted to this contest by training it on the images taken from the simulator.
 
 ## Results
 
-After having some trouble concerning the computational power needed by the simulation, I was able to run it smoothly applying some tuning on critical parameters.
-The resuls are visibile in the [video](media/capstone-video.mp4).
-where here there is a short preview.
+During the project developement, I had some trouble concerning the computational power needed by the simulation.
+I was able to solve the problem and run the simulation smoothly by tuning some critical parameters.
+
+The car is able to complete the full track following the given waypoints and making stops in case of red traffic lights.
+
+The resuls are visibile in the [video](media/capstone-video.mp4) and in these short previews.
 
 
 <p float="left">
-  <img src="media/waypoint_follower.gif" width="400" />
-  <img src="media/traffic-light-stop.gif" width="400" />
+  <img src="media/waypoint_follower.gif" width="350" />
+  <img src="media/traffic-light-stop.gif" width="350" />
 </p>
 
 
