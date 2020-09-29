@@ -84,35 +84,40 @@ roslaunch launch/site.launch
 ### System Architecture
 The following is a system architecture diagram showing the ROS nodes and topics used in the project.
 
-IMAGE!
+![](media/)
 
 The ROS nodes and topics shown in the diagram are described briefly in the next sections.
 
 ### Waypoint updater
 
-The purpose of this node is to update the target velocity property of each waypoint based on traffic light and obstacle detection data. This node will subscribe to the ``/base_waypoints``, ``/current_pose``, ``/obstacle_waypoint``, and ``/traffic_waypoint`` topics, and publish a list of waypoints ahead of the car with target velocities to the ``/final_waypoints`` topic.
+The purpose of this node is to update the target velocity property of each waypoint based on traffic light data. This node will subscribe to the ``/base_waypoints``, ``/current_pose`` and ``/traffic_waypoint`` topics, and publish a list of waypoints ahead of the car with target velocities to the ``/final_waypoints`` topic.
 
 The number of waypoints and the publishing rate are choosen in order to obtain good accuracy yet keeping the simulation able to run in the provided workspace and on my local machine.
 
 
 ### Drive-by-wire node
 
-The drive-by-wire (dbw) node (in particular the packages ``dbw_node.py``, ``twist_controller.py``, along with a pid and lowpass filter), is responsible for the throttle, brake, and steering control. 
+The drive-by-wire (dbw) node (in particular the packages ``dbw_node.py``, ``twist_controller.py``, along with a pid and lowpass filter) is responsible for the throttle, brake, and steering control. 
 
 The dbw_node subscribes to the ``/current_velocity`` topic along with the ``/twist_cmd topic`` to receive target linear and angular velocities. Additionally, this node will subscribe to ``/vehicle/dbw_enabled``, which indicates if the car is under dbw or driver control. This node will publish throttle, brake, and steering commands to the ``/vehicle/throttle_cmd``, ``/vehicle/brake_cmd``, and ``/vehicle/steering_cmd`` topics.
 
 The throttle value is managed by a PI controller tuned such that the car is able to reach the target velocity.
-On the other hand, the steering angle 
+On the other hand, the steering angle is obtained from the package ``yaw__controller.py`` and is defined in a way that the car follows the waypoints.
 
 ### Traffic Light Detection
 
 This package contains the traffic light detection node: ``tl_detector.py``. This node takes in data from the ``/image_color``, ``/current_pose``, and ``/base_waypoints`` topics and publishes the locations to stop for red traffic lights to the ``/traffic_waypoint`` topic.
 
 The ``/current_pose`` topic provides the vehicle's current position, and ``/base_waypoints`` provides a complete list of waypoints the car will be following.
-ypoint to stop at for any upcoming identified red traffic light is published in this subroutine.
+
+This node is responsible for detecting upcoming traffic lights and classify their states (red, yellow, green).
+
+I used the pre-trained [SSD](https://github.com/tensorflow/models/tree/master/research/object_detection) (Single Shot MultiBox Detector) model to detect and classify the traffic lights in the images provided by the camera. 
+
+The model was adapted to this contest by training it on the images taken from the simulator.
 
 ## Results
 
 After having some trouble concerning the computational power needed by the simulation, I was able to run it smoothly applying some tuning on critical parameters.
-The resuls are visibile in the video (LINK A VIDEO)
+The resuls are visibile in the video. (LINK A VIDEO)
 where here there is a short preview.
