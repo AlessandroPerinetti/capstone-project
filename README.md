@@ -84,7 +84,7 @@ roslaunch launch/site.launch
 ### System Architecture
 The following is a system architecture diagram showing the ROS nodes and topics used in the project.
 
-![](media/)
+![](media/final-project-ros-graph.png)
 
 The ROS nodes and topics shown in the diagram are described briefly in the next sections.
 
@@ -119,5 +119,13 @@ The model was adapted to this contest by training it on the images taken from th
 ## Results
 
 After having some trouble concerning the computational power needed by the simulation, I was able to run it smoothly applying some tuning on critical parameters.
-The resuls are visibile in the video. (LINK A VIDEO)
+The resuls are visibile in the [video](media/capstone-video.mp4).
 where here there is a short preview.
+
+
+<p float="left">
+  <img src="media/waypoint_follower.gif" width="400" />
+  <img src="media/traffic-light-stop.gif" width="400" />
+</p>
+
+
