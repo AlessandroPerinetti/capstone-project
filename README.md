@@ -4,6 +4,8 @@
 
 This is the project repo for the final project of the Udacity Self-Driving Car Nanodegree: Programming a Real Self-Driving Car. For more information about the project, see the project introduction [here](https://github.com/udacity/CarND-Capstone).
 
+The project is completed as an **Individual Submission**.
+
 Please use **one** of the two installation options, either native **or** docker installation.
 
 ### Native Installation
@@ -79,8 +81,38 @@ roslaunch launch/site.launch
 
 ## Implementation
 
+### System Architecture
+The following is a system architecture diagram showing the ROS nodes and topics used in the project.
+
+IMAGE!
+
+The ROS nodes and topics shown in the diagram are described briefly in the next sections.
+
 ### Waypoint updater
+
+The purpose of this node is to update the target velocity property of each waypoint based on traffic light and obstacle detection data. This node will subscribe to the ``/base_waypoints``, ``/current_pose``, ``/obstacle_waypoint``, and ``/traffic_waypoint`` topics, and publish a list of waypoints ahead of the car with target velocities to the ``/final_waypoints`` topic.
+
+The number of waypoints and the publishing rate are choosen in order to obtain good accuracy yet keeping the simulation able to run in the provided workspace and on my local machine.
+
 
 ### Drive-by-wire node
 
+The drive-by-wire (dbw) node (in particular the packages ``dbw_node.py``, ``twist_controller.py``, along with a pid and lowpass filter), is responsible for the throttle, brake, and steering control. 
+
+The dbw_node subscribes to the ``/current_velocity`` topic along with the ``/twist_cmd topic`` to receive target linear and angular velocities. Additionally, this node will subscribe to ``/vehicle/dbw_enabled``, which indicates if the car is under dbw or driver control. This node will publish throttle, brake, and steering commands to the ``/vehicle/throttle_cmd``, ``/vehicle/brake_cmd``, and ``/vehicle/steering_cmd`` topics.
+
+The throttle value is managed by a PI controller tuned such that the car is able to reach the target velocity.
+On the other hand, the steering angle 
+
 ### Traffic Light Detection
+
+This package contains the traffic light detection node: ``tl_detector.py``. This node takes in data from the ``/image_color``, ``/current_pose``, and ``/base_waypoints`` topics and publishes the locations to stop for red traffic lights to the ``/traffic_waypoint`` topic.
+
+The ``/current_pose`` topic provides the vehicle's current position, and ``/base_waypoints`` provides a complete list of waypoints the car will be following.
+ypoint to stop at for any upcoming identified red traffic light is published in this subroutine.
+
+## Results
+
+After having some trouble concerning the computational power needed by the simulation, I was able to run it smoothly applying some tuning on critical parameters.
+The resuls are visibile in the video (LINK A VIDEO)
+where here there is a short preview.
